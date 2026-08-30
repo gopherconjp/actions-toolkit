@@ -1,0 +1,32 @@
+name: Verify (Repo)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: verify-repo-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-actions:
+    name: Verify (Actions)
+    uses: ./.github/workflows/verify-actions.yaml
+    permissions:
+      contents: read
+      checks: write
+
+  verify-wait-for-workflow:
+    name: Verify (Wait for Workflow)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      checks: write
+      actions: read
+    steps:
+      - name: Wait for CodeQL workflow
+        uses: ./wait-for-workflow/action.yaml
+        with:
+          workflow-id: codeql.yaml
