@@ -4,7 +4,7 @@
 [![Verify (Repo)](https://github.com/gopherconjp/actions-toolkit/actions/workflows/verify-repo.yaml/badge.svg)](https://github.com/gopherconjp/actions-toolkit/actions/workflows/verify-repo.yaml)
 [![CodeQL Advanced](https://github.com/gopherconjp/actions-toolkit/actions/workflows/codeql.yaml/badge.svg)](https://github.com/gopherconjp/actions-toolkit/actions/workflows/codeql.yaml)
 
-A collection of composite actions and reusable workflows
+A collection of reusable workflows and composite actions
 
 ## Reusable Workflows
 
