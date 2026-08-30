@@ -1,5 +1,9 @@
 # actions-toolkit
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Verify (Repo)](https://github.com/gopherconjp/actions-toolkit/actions/workflows/verify-repo.yaml/badge.svg)](https://github.com/gopherconjp/actions-toolkit/actions/workflows/verify-repo.yaml)
+[![CodeQL Advanced](https://github.com/gopherconjp/actions-toolkit/actions/workflows/codeql.yaml/badge.svg)](https://github.com/gopherconjp/actions-toolkit/actions/workflows/codeql.yaml)
+
 A collection of composite actions and reusable workflows
 
 ## Reusable Workflows
