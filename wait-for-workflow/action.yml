@@ -1,0 +1,56 @@
+name: Wait for workflow
+description: Wait for another workflow run on the same commit to complete, failing if it does not succeed.
+
+inputs:
+  workflow-id:
+    description: Workflow file name or ID of the workflow to wait for.
+    required: true
+  timeout-minutes:
+    description: Maximum time to wait in minutes.
+    required: false
+    default: "10"
+
+runs:
+  using: composite
+  steps:
+    - name: Wait for workflow
+      uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+      env:
+        WAIT_WORKFLOW_ID: ${{ inputs.workflow-id }}
+        WAIT_TIMEOUT_MINUTES: ${{ inputs.timeout-minutes }}
+      with:
+        script: |
+          const workflowId = process.env.WAIT_WORKFLOW_ID;
+          const headSha = context.payload.pull_request?.head.sha ?? context.sha;
+          const { owner, repo } = context.repo;
+
+          const startedAt = Date.now();
+          const timeoutMinutes = Number(process.env.WAIT_TIMEOUT_MINUTES);
+          const timeoutMs = timeoutMinutes * 60 * 1000;
+
+          for (;;) {
+            const { data } = await github.rest.actions.listWorkflowRuns({
+              owner,
+              repo,
+              workflow_id: workflowId,
+              head_sha: headSha,
+              per_page: 1,
+            });
+            const run = data.workflow_runs[0];
+
+            if (run?.status === "completed") {
+              console.log(`Workflow run #${run.id} concluded: ${run.conclusion}`);
+
+              if (run.conclusion !== "success") {
+                throw new Error(`Workflow "${workflowId}" did not succeed (conclusion: ${run.conclusion}).`);
+              }
+
+              break;
+            }
+
+            if (Date.now() - startedAt >= timeoutMs) {
+              throw new Error(`Timed out waiting for the "${workflowId}" workflow to complete.`);
+            }
+
+            await new Promise((resolve) => setTimeout(resolve, 10_000));
+          }
