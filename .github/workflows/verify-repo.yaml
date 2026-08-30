@@ -30,6 +30,6 @@ jobs:
         with:
           persist-credentials: false
       - name: Wait for CodeQL workflow
-        uses: ./wait-for-workflow/action.yaml
+        uses: ./wait-for-workflow
         with:
           workflow-id: codeql.yaml
