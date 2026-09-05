@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   verify-actions:
-    uses: ./.github/workflows/verify-actions.yaml
+    uses: $/.github/workflows/verify-actions.yaml
     permissions:
       contents: read
       checks: write
@@ -29,6 +29,6 @@ jobs:
         with:
           persist-credentials: false
       - name: Wait for CodeQL workflow
-        uses: ./wait-for-workflow
+        uses: $/wait-for-workflow
         with:
           workflow-id: codeql.yaml
