@@ -1,8 +1,8 @@
 # actions-toolkit
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Verify (Repo)](https://github.com/gopherconjp/actions-toolkit/actions/workflows/verify-repo.yaml/badge.svg)](https://github.com/gopherconjp/actions-toolkit/actions/workflows/verify-repo.yaml)
-[![CodeQL Advanced](https://github.com/gopherconjp/actions-toolkit/actions/workflows/codeql.yaml/badge.svg)](https://github.com/gopherconjp/actions-toolkit/actions/workflows/codeql.yaml)
+[![Verify (Repo)](https://github.com/logica0419-oss/actions-toolkit/actions/workflows/verify-repo.yaml/badge.svg)](https://github.com/logica0419-oss/actions-toolkit/actions/workflows/verify-repo.yaml)
+[![CodeQL Advanced](https://github.com/logica0419-oss/actions-toolkit/actions/workflows/codeql.yaml/badge.svg)](https://github.com/logica0419-oss/actions-toolkit/actions/workflows/codeql.yaml)
 
 A collection of reusable workflows and composite actions
 
@@ -20,7 +20,7 @@ on:
 
 jobs:
   verify-actions:
-    uses: gopherconjp/actions-toolkit/.github/workflows/verify-actions.yaml@main
+    uses: logica0419-oss/actions-toolkit/.github/workflows/verify-actions.yaml@main
     permissions:
       contents: read
       checks: write
@@ -39,7 +39,7 @@ steps:
   - name: Checkout
     uses: actions/checkout@v7
   - name: Setup Bun environment
-    uses: gopherconjp/actions-toolkit/setup-bun@main
+    uses: logica0419-oss/actions-toolkit/setup-bun@main
 ```
 
 ### wait-for-workflow
@@ -52,7 +52,7 @@ steps:
   - name: Checkout
     uses: actions/checkout@v7
   - name: Wait for tests
-    uses: gopherconjp/actions-toolkit/wait-for-workflow@main
+    uses: logica0419-oss/actions-toolkit/wait-for-workflow@main
     with:
       workflow-id: test.yaml
       timeout-minutes: 15 # defaults to 10
