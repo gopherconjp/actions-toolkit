@@ -1,0 +1,11 @@
+language: "en-US"
+
+reviews:
+  profile: assertive
+  request_changes_workflow: true
+
+  auto_review:
+    enabled: true
+    drafts: false
+    ignore_usernames:
+      - "renovate[bot]"
