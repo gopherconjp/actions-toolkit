@@ -32,30 +32,42 @@ Grant the `contents: read` and `checks: write` permissions on the calling job.
 
 ### setup-bun
 
-Sets up JS runtimes (via mise) and installs dependencies with Bun.
+Sets up JS runtimes (via mise) and installs dependencies with Bun.  
+No special permissions are required.
 
 ```yaml
-steps:
-  - name: Checkout
-    uses: actions/checkout@v7
-  - name: Setup Bun environment
-    uses: logica0419-oss/actions-toolkit/setup-bun@main
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Setup Bun environment
+        uses: logica0419-oss/actions-toolkit/setup-bun@main
 ```
 
 ### wait-for-workflow
 
 Waits for another workflow run on the same commit to complete, failing if it does not succeed.  
-Requires the `actions: read` permission.
+Requires the `contents: read` and `actions: read` permissions.
 
 ```yaml
-steps:
-  - name: Checkout
-    uses: actions/checkout@v7
-  - name: Wait for tests
-    uses: logica0419-oss/actions-toolkit/wait-for-workflow@main
-    with:
-      workflow-id: test.yaml
-      timeout-minutes: 15 # defaults to 10
+jobs:
+  wait:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Wait for tests
+        uses: logica0419-oss/actions-toolkit/wait-for-workflow@main
+        with:
+          workflow-id: test.yaml
+          timeout-minutes: 15 # defaults to 10
 ```
 
 #### Inputs
@@ -64,3 +76,94 @@ steps:
 | ----------------- | -------- | ------- | ------------------------------------ |
 | `workflow-id`     | ✅       | —       | Workflow file name or ID to wait for |
 | `timeout-minutes` | —        | `10`    | Maximum time to wait in minutes      |
+
+### check-release-label
+
+Fails unless exactly one of the patch, minor, or major release labels is attached.  
+Requires the `pull-requests: read` permission.
+
+```yaml
+name: Verify (Release Label)
+
+on:
+  pull_request:
+    types: [opened, labeled, unlabeled, synchronize]
+
+jobs:
+  check-release-label:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: read
+    steps:
+      - name: Check release label
+        uses: logica0419-oss/actions-toolkit/check-release-label@main
+        with:
+          major-label: major # defaults to major
+          minor-label: minor # defaults to minor
+          patch-label: patch # defaults to patch
+          ignore-authors: renovate[bot] # defaults to renovate[bot]
+```
+
+#### Inputs
+
+| Input            | Required | Default         | Description                                     |
+| ---------------- | -------- | --------------- | ----------------------------------------------- |
+| `major-label`    | —        | `major`         | Label triggering a major release                |
+| `minor-label`    | —        | `minor`         | Label triggering a minor release                |
+| `patch-label`    | —        | `patch`         | Label triggering a patch release                |
+| `ignore-authors` | —        | `renovate[bot]` | Authors skipped without labels, comma-separated |
+
+### release
+
+Creates a SemVer tag and GitHub Release from merged PR labels.  
+Requires the `contents: write` and `pull-requests: read` permissions.
+
+```yaml
+name: Release
+
+on:
+  schedule:
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Create release
+        id: release
+        uses: logica0419-oss/actions-toolkit/release@main
+        with:
+          initial-version: v1.0.0 # defaults to v1.0.0
+          major-label: major # defaults to major
+          minor-label: minor # defaults to minor
+```
+
+The `minor` label triggers a minor release.  
+The `major` label triggers a major release.  
+PRs without either label default to a patch release.
+
+#### Inputs
+
+| Input             | Required | Default  | Description                                 |
+| ----------------- | -------- | -------- | ------------------------------------------- |
+| `initial-version` | —        | `v1.0.0` | Tag created when no previous release exists |
+| `major-label`     | —        | `major`  | Label triggering a major release            |
+| `minor-label`     | —        | `minor`  | Label triggering a minor release            |
+
+#### Outputs
+
+| Output | Description                                     |
+| ------ | ----------------------------------------------- |
+| `tag`  | Created tag, empty when no release was created. |
