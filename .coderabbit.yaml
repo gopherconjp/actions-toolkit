@@ -4,6 +4,11 @@ reviews:
   profile: assertive
   request_changes_workflow: true
 
+  path_filters:
+    - "!.github/skills/**"
+    - "!.github/instructions/**"
+    - "!.github/copilot-instructions.md"
+
   auto_review:
     enabled: true
     drafts: false
@@ -11,5 +16,7 @@ reviews:
       - "renovate[bot]"
 
   path_instructions:
-    - path: ".releaserc.json"
-      instructions: "Use semantic-release default presets (angular). Do not suggest conventionalcommits preset or extra_plugins; keep release config minimal."
+    - path: "release/action.yaml"
+      instructions: "Accept by design (do not report): single main branch operation with date-based PR detection, fixed main branch, and listReleases lookup."
+    - path: ".github/workflows/**"
+      instructions: "Accept by design (do not report): $/ is valid self-repository syntax; actionlint lacks support (rhysd/actionlint#711)."
