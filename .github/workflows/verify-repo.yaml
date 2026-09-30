@@ -11,10 +11,19 @@ concurrency:
 
 jobs:
   verify-actions:
-    uses: $/.github/workflows/verify-actions.yaml
+    name: Verify (Actions)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
       checks: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Verify actions
+        uses: $/verify-actions
 
   verify-wait-for-workflow:
     name: Verify (Wait for Workflow)

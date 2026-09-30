@@ -4,31 +4,31 @@
 [![Verify (Repo)](https://github.com/logica0419-oss/actions-toolkit/actions/workflows/verify-repo.yaml/badge.svg)](https://github.com/logica0419-oss/actions-toolkit/actions/workflows/verify-repo.yaml)
 [![CodeQL Advanced](https://github.com/logica0419-oss/actions-toolkit/actions/workflows/codeql.yaml/badge.svg)](https://github.com/logica0419-oss/actions-toolkit/actions/workflows/codeql.yaml)
 
-A collection of reusable workflows and composite actions
+A collection of composite actions
 
-## Reusable Workflows
+## Composite Actions
 
 ### verify-actions
 
-Lints GitHub Actions (workflows / composite actions) with actionlint, ghalint, and zizmor.
+Lints GitHub Actions (workflows / composite actions) with actionlint, ghalint, and zizmor.  
+Requires the `contents: read` and `checks: write` permissions.
 
 ```yaml
-name: Verify (Actions)
-
-on:
-  pull_request:
-
 jobs:
   verify-actions:
-    uses: logica0419-oss/actions-toolkit/.github/workflows/verify-actions.yaml@main
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: read
       checks: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Verify actions
+        uses: logica0419-oss/actions-toolkit/verify-actions@main
 ```
-
-Grant the `contents: read` and `checks: write` permissions on the calling job.
-
-## Composite Actions
 
 ### setup-bun
 
