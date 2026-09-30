@@ -9,3 +9,7 @@ reviews:
     drafts: false
     ignore_usernames:
       - "renovate[bot]"
+
+  path_instructions:
+    - path: ".releaserc.json"
+      instructions: "Use semantic-release default presets (angular). Do not suggest conventionalcommits preset or extra_plugins; keep release config minimal."

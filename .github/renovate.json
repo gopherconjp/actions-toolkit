@@ -5,6 +5,8 @@
   "prConcurrentLimit": 0,
   "labels": ["dependencies"],
   "minimumReleaseAge": "3 days",
+  "semanticCommits": "enabled",
+  "semanticCommitType": "chore",
   "gitIgnoredAuthors": ["114827586+autofix-ci[bot]@users.noreply.github.com"],
   "customManagers": [
     {
