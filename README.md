@@ -24,6 +24,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: Verify actions
         uses: logica0419-oss/actions-toolkit/verify-actions@main
 ```

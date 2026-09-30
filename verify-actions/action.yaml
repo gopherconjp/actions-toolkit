@@ -9,14 +9,14 @@ runs:
       with:
         fail_level: error
     - name: Install ghalint
+      id: install
       env:
         GH_TOKEN: ${{ github.token }}
         GHALINT_VERSION: "v1.5.6"
       run: |
         set -eu -o pipefail
 
-        install_dir="$RUNNER_TEMP/ghalint-bin"
-        mkdir -p "$install_dir"
+        install_dir="$(mktemp -d "$RUNNER_TEMP/ghalint-bin.XXXXXX")"
         cd "$install_dir"
 
         gh release download "$GHALINT_VERSION" -R suzuki-shunsuke/ghalint \
@@ -26,11 +26,14 @@ runs:
         tarball=$(ls ghalint_*_linux_amd64.tar.gz)
         grep " $tarball$" ghalint_*_checksums.txt | sha256sum -c -
         tar -xzf "$tarball" ghalint
+        echo "install-dir=$install_dir" >> "$GITHUB_OUTPUT"
       shell: bash
     - name: Run ghalint
+      env:
+        GHALINT_BIN: ${{ steps.install.outputs.install-dir }}/ghalint
       run: |
-        "$RUNNER_TEMP/ghalint-bin/ghalint" run
-        "$RUNNER_TEMP/ghalint-bin/ghalint" run-action
+        "$GHALINT_BIN" run
+        "$GHALINT_BIN" run-action
       shell: bash
     - name: Run zizmor
       uses: zizmorcore/zizmor-action@cc914d7f3750a2d13d75c7f184a1060aa0e9d482 # v0.6.4
