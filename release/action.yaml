@@ -3,7 +3,7 @@ description: Create a SemVer tag and GitHub Release from merged PR labels.
 
 inputs:
   initial-version:
-    description: Tag created when no previous release exists.
+    description: Tag created when no previous release exists. Must use vMAJOR.MINOR.PATCH.
     required: false
     default: "v1.0.0"
   major-label:
@@ -42,7 +42,11 @@ runs:
             per_page: 1,
           });
           if (releases.length === 0) {
-            core.setOutput("tag", process.env.INITIAL_VERSION);
+            const initialVersion = process.env.INITIAL_VERSION;
+            if (!/^v(\d+)\.(\d+)\.(\d+)$/.test(initialVersion)) {
+              throw new Error("initial-version must use vMAJOR.MINOR.PATCH.");
+            }
+            core.setOutput("tag", initialVersion);
             return;
           }
 

@@ -127,6 +127,10 @@ on:
     - cron: "0 0 * * 1"
   workflow_dispatch:
 
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   release:
     runs-on: ubuntu-latest
