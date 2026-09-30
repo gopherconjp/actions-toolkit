@@ -1,8 +1,8 @@
 # actions-toolkit
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Verify (Repo)](https://github.com/logica0419-oss/actions-toolkit/actions/workflows/verify-repo.yaml/badge.svg)](https://github.com/logica0419-oss/actions-toolkit/actions/workflows/verify-repo.yaml)
-[![CodeQL Advanced](https://github.com/logica0419-oss/actions-toolkit/actions/workflows/codeql.yaml/badge.svg)](https://github.com/logica0419-oss/actions-toolkit/actions/workflows/codeql.yaml)
+[![Verify (Repo)](https://github.com/logica-oss/actions-toolkit/actions/workflows/verify-repo.yaml/badge.svg)](https://github.com/logica-oss/actions-toolkit/actions/workflows/verify-repo.yaml)
+[![CodeQL Advanced](https://github.com/logica-oss/actions-toolkit/actions/workflows/codeql.yaml/badge.svg)](https://github.com/logica-oss/actions-toolkit/actions/workflows/codeql.yaml)
 
 A collection of composite actions
 
@@ -27,7 +27,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Verify actions
-        uses: logica0419-oss/actions-toolkit/verify-actions@main
+        uses: logica-oss/actions-toolkit/verify-actions@main
 ```
 
 ### setup-bun
@@ -44,7 +44,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
       - name: Setup Bun environment
-        uses: logica0419-oss/actions-toolkit/setup-bun@main
+        uses: logica-oss/actions-toolkit/setup-bun@main
 ```
 
 ### wait-for-workflow
@@ -64,7 +64,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
       - name: Wait for tests
-        uses: logica0419-oss/actions-toolkit/wait-for-workflow@main
+        uses: logica-oss/actions-toolkit/wait-for-workflow@main
         with:
           workflow-id: test.yaml
           timeout-minutes: 15 # defaults to 10
@@ -97,7 +97,7 @@ jobs:
       pull-requests: read
     steps:
       - name: Check release label
-        uses: logica0419-oss/actions-toolkit/check-release-label@main
+        uses: logica-oss/actions-toolkit/check-release-label@main
         with:
           major-label: major # defaults to major
           minor-label: minor # defaults to minor
@@ -143,7 +143,7 @@ jobs:
         uses: actions/checkout@v7
       - name: Create release
         id: release
-        uses: logica0419-oss/actions-toolkit/release@main
+        uses: logica-oss/actions-toolkit/release@main
         with:
           initial-version: v1.0.0 # defaults to v1.0.0
           major-label: major # defaults to major
