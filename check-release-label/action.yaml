@@ -1,0 +1,58 @@
+name: Check release label
+description: Require exactly one of the patch, minor, or major release labels.
+
+inputs:
+  major-label:
+    description: Label triggering a major release.
+    required: false
+    default: "major"
+  minor-label:
+    description: Label triggering a minor release.
+    required: false
+    default: "minor"
+  patch-label:
+    description: Label triggering a patch release.
+    required: false
+    default: "patch"
+  ignore-authors:
+    description: Comma-separated authors skipped without labels. Separate multiple authors with commas.
+    required: false
+    default: "renovate[bot]"
+
+runs:
+  using: composite
+  steps:
+    - name: Check release label
+      uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+      env:
+        MAJOR_LABEL: ${{ inputs.major-label }}
+        MINOR_LABEL: ${{ inputs.minor-label }}
+        PATCH_LABEL: ${{ inputs.patch-label }}
+        IGNORE_AUTHORS: ${{ inputs.ignore-authors }}
+      with:
+        script: |
+          const majorLabel = process.env.MAJOR_LABEL;
+          const minorLabel = process.env.MINOR_LABEL;
+          const patchLabel = process.env.PATCH_LABEL;
+          const ignored = process.env.IGNORE_AUTHORS.split(",").map((author) => author.trim());
+
+          if (context.eventName !== "pull_request") {
+            return;
+          }
+
+          const pull = context.payload.pull_request;
+
+          if (ignored.includes(pull.user.login)) {
+            return;
+          }
+
+          const labels = pull.labels.map((label) => label.name);
+          const attached = [majorLabel, minorLabel, patchLabel].filter((label) =>
+            labels.includes(label),
+          );
+
+          if (attached.length === 0) {
+            core.setFailed(`Attach one of "${majorLabel}", "${minorLabel}", or "${patchLabel}".`);
+          } else if (attached.length > 1) {
+            core.setFailed(`Attach only one of "${majorLabel}", "${minorLabel}", or "${patchLabel}".`);
+          }

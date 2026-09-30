@@ -1,0 +1,132 @@
+name: Release
+description: Create a SemVer tag and GitHub Release from merged PR labels.
+
+inputs:
+  initial-version:
+    description: Tag created when no previous release exists.
+    required: false
+    default: "v1.0.0"
+  major-label:
+    description: Label triggering a major release.
+    required: false
+    default: "major"
+  minor-label:
+    description: Label triggering a minor release.
+    required: false
+    default: "minor"
+
+outputs:
+  tag:
+    description: Created tag, empty when no release was created.
+    value: ${{ steps.create.outputs.tag }}
+
+runs:
+  using: composite
+  steps:
+    - name: Determine next tag
+      id: determine
+      uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+      env:
+        INITIAL_VERSION: ${{ inputs.initial-version }}
+        MAJOR_LABEL: ${{ inputs.major-label }}
+        MINOR_LABEL: ${{ inputs.minor-label }}
+      with:
+        script: |
+          const { owner, repo } = context.repo;
+          const majorLabel = process.env.MAJOR_LABEL;
+          const minorLabel = process.env.MINOR_LABEL;
+
+          const { data: releases } = await github.rest.repos.listReleases({
+            owner,
+            repo,
+            per_page: 1,
+          });
+          if (releases.length === 0) {
+            core.setOutput("tag", process.env.INITIAL_VERSION);
+            return;
+          }
+
+          const baseTag = releases[0].tag_name;
+          const match = baseTag.match(/^v(\d+)\.(\d+)\.(\d+)$/);
+          if (!match) {
+            throw new Error(`Latest release tag ${baseTag} is not SemVer.`);
+          }
+
+          const baseDate = new Date(releases[0].created_at);
+          const mergedPulls = await github.paginate(
+            github.rest.search.issuesAndPullRequests,
+            {
+              q: `repo:${owner}/${repo} is:pr is:merged base:main merged:>${baseDate.toISOString()}`,
+              per_page: 100,
+            },
+          );
+          if (mergedPulls.length === 0) {
+            core.setOutput("tag", "");
+            return;
+          }
+
+          let bump = "patch";
+          for (const pull of mergedPulls) {
+            const labels = pull.labels.map((label) => label.name);
+            if (labels.includes(majorLabel)) {
+              bump = "major";
+              break;
+            }
+            if (labels.includes(minorLabel)) {
+              bump = "minor";
+            }
+          }
+
+          const [major, minor, patch] = match.slice(1, 4).map(Number);
+          const next = bump === "major"
+            ? [major + 1, 0, 0]
+            : bump === "minor"
+              ? [major, minor + 1, 0]
+              : [major, minor, patch + 1];
+
+          core.setOutput("tag", `v${next.join(".")}`);
+
+    - name: Create tag and release
+      id: create
+      uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+      env:
+        TAG: ${{ steps.determine.outputs.tag }}
+      with:
+        script: |
+          const { owner, repo } = context.repo;
+
+          const tag = process.env.TAG;
+          if (!tag) {
+            console.log("No changes since the last release.");
+            return;
+          }
+
+          try {
+            await github.rest.git.createRef({
+              owner,
+              repo,
+              ref: `refs/tags/${tag}`,
+              sha: context.sha,
+            });
+          } catch (error) {
+            if (error.status !== 422) {
+              throw error;
+            }
+            const { data: existing } = await github.rest.git.getRef({
+              owner,
+              repo,
+              ref: `tags/${tag}`,
+            });
+            if (existing.object.sha !== context.sha) {
+              throw new Error(`Tag ${tag} already points to ${existing.object.sha}.`);
+            }
+          }
+
+          await github.rest.repos.createRelease({
+            owner,
+            repo,
+            tag_name: tag,
+            generate_release_notes: true,
+          });
+
+          core.setOutput("tag", tag);
