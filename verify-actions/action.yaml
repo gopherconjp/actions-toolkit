@@ -26,6 +26,7 @@ runs:
         tarball=$(ls ghalint_*_linux_amd64.tar.gz)
         grep " $tarball$" ghalint_*_checksums.txt | sha256sum -c -
         tar -xzf "$tarball" ghalint
+
         echo "install-dir=$install_dir" >> "$GITHUB_OUTPUT"
       shell: bash
     - name: Run ghalint
