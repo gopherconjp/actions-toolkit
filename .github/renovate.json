@@ -14,6 +14,14 @@
       "matchStrings": ["GHALINT_VERSION: \"(?<currentValue>v?\\d+\\.\\d+\\.\\d+)\""],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "suzuki-shunsuke/ghalint"
+    },
+    {
+      "description": "Track the pinned oxfmt version in autofix workflow",
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github\\/workflows\\/autofix\\.yaml$/"],
+      "matchStrings": ["OXFMT_VERSION: \"(?<currentValue>\\d+\\.\\d+\\.\\d+)\""],
+      "datasourceTemplate": "npm",
+      "depNameTemplate": "oxfmt"
     }
   ],
   "packageRules": [
