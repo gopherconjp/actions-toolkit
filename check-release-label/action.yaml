@@ -15,7 +15,7 @@ inputs:
     required: false
     default: "patch"
   ignore-authors:
-    description: Comma-separated authors skipped without labels. Separate multiple authors with commas.
+    description: Authors skipped without labels, one per line.
     required: false
     default: "renovate[bot]"
 
@@ -34,7 +34,10 @@ runs:
           const majorLabel = process.env.MAJOR_LABEL;
           const minorLabel = process.env.MINOR_LABEL;
           const patchLabel = process.env.PATCH_LABEL;
-          const ignored = process.env.IGNORE_AUTHORS.split(",").map((author) => author.trim());
+          const ignored = (process.env.IGNORE_AUTHORS ?? "")
+            .split(/[\r\n,]+/)
+            .map((author) => author.trim())
+            .filter(Boolean);
 
           if (context.eventName !== "pull_request") {
             return;

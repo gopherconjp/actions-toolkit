@@ -102,17 +102,18 @@ jobs:
           major-label: major # defaults to major
           minor-label: minor # defaults to minor
           patch-label: patch # defaults to patch
-          ignore-authors: renovate[bot] # defaults to renovate[bot]
+          ignore-authors: | # defaults to renovate[bot]
+            renovate[bot]
 ```
 
 #### Inputs
 
-| Input            | Required | Default         | Description                                     |
-| ---------------- | -------- | --------------- | ----------------------------------------------- |
-| `major-label`    | —        | `major`         | Label triggering a major release                |
-| `minor-label`    | —        | `minor`         | Label triggering a minor release                |
-| `patch-label`    | —        | `patch`         | Label triggering a patch release                |
-| `ignore-authors` | —        | `renovate[bot]` | Authors skipped without labels, comma-separated |
+| Input            | Required | Default         | Description                                  |
+| ---------------- | -------- | --------------- | -------------------------------------------- |
+| `major-label`    | —        | `major`         | Label triggering a major release             |
+| `minor-label`    | —        | `minor`         | Label triggering a minor release             |
+| `patch-label`    | —        | `patch`         | Label triggering a patch release             |
+| `ignore-authors` | —        | `renovate[bot]` | Authors skipped without labels, one per line |
 
 ### release
 
