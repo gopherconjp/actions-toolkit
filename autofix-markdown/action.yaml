@@ -1,0 +1,53 @@
+name: Autofix Markdown
+description: Fix Markdown with markdownlint and format with Oxfmt, then verify with lint-only check.
+
+inputs:
+  markdown-globs:
+    description: Glob expression(s) of Markdown files to lint, newline-delimited.
+    required: false
+    default: "**/*.md"
+  oxfmt-paths:
+    description: Paths for Oxfmt to format, space-delimited.
+    required: false
+    default: "."
+  oxfmt-version:
+    description: Oxfmt version to use.
+    required: false
+    default: "0.71.0"
+  enable-markdown:
+    description: Whether to run markdownlint fix and lint.
+    required: false
+    default: "true"
+  enable-oxfmt:
+    description: Whether to run Oxfmt formatting.
+    required: false
+    default: "true"
+
+runs:
+  using: composite
+  steps:
+    - name: Fix Markdown
+      if: inputs.enable-markdown == 'true'
+      continue-on-error: true
+      uses: DavidAnson/markdownlint-cli2-action@21c1be1b93ad9ed58fa840aacc3f279cde2a72ff # v24.2.0
+      with:
+        fix: true
+        globs: ${{ inputs.markdown-globs }}
+    - name: Format with Oxfmt
+      if: inputs.enable-oxfmt == 'true'
+      env:
+        OXFMT_VERSION: ${{ inputs.oxfmt-version }}
+        OXFMT_PATHS: ${{ inputs.oxfmt-paths }}
+      run: |
+        set -eu -o pipefail
+
+        # shellcheck disable=SC2086
+        npx --yes "oxfmt@${OXFMT_VERSION}" --write $OXFMT_PATHS
+      shell: bash
+    - name: Commit changes
+      uses: autofix-ci/action@c5b2d67aa2274e7b5a18224e8171550871fc7e4a # v1.3.4
+    - name: Lint Markdown
+      if: inputs.enable-markdown == 'true'
+      uses: DavidAnson/markdownlint-cli2-action@21c1be1b93ad9ed58fa840aacc3f279cde2a72ff # v24.2.0
+      with:
+        globs: ${{ inputs.markdown-globs }}
