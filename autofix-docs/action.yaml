@@ -25,12 +25,13 @@ runs:
         fix: true
         globs: ${{ inputs.markdown-globs }}
     - name: Format with Oxfmt
-      if: inputs.enable-oxfmt == 'true' && inputs.oxfmt-paths != ''
+      if: inputs.enable-oxfmt == 'true'
       env:
         OXFMT_VERSION: "0.71.0"
         OXFMT_PATHS: ${{ inputs.oxfmt-paths }}
       run: |
         set -o noglob
+        [[ -n "${OXFMT_PATHS//[[:space:]]/}" ]] || exit 0
         npx --yes "oxfmt@${OXFMT_VERSION}" --write --no-error-on-unmatched-pattern $OXFMT_PATHS
       shell: bash
     - name: Commit changes
