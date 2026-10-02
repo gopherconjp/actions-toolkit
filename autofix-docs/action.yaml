@@ -31,8 +31,6 @@ runs:
         OXFMT_PATHS: ${{ inputs.oxfmt-paths }}
       run: |
         set -o noglob
-
-        # shellcheck disable=SC2086
         npx --yes "oxfmt@${OXFMT_VERSION}" --write --no-error-on-unmatched-pattern $OXFMT_PATHS
       shell: bash
     - name: Commit changes
