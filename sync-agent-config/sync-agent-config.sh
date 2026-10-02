@@ -1,11 +1,6 @@
 #!/bin/bash
 set -eu -o pipefail
 
-# Sync agent configs from canonical sources.
-# - AGENTS.md -> .github/copilot-instructions.md (with DO NOT EDIT header)
-# - .github/instructions/*.instructions.md -> .claude/rules/*.md (applyTo -> paths)
-# - .agents/skills/* -> .claude/skills/* (copy)
-
 REPO_ROOT="${GITHUB_WORKSPACE:-$(git rev-parse --show-toplevel)}"
 cd "$REPO_ROOT"
 
@@ -14,21 +9,20 @@ fail() {
   exit 1
 }
 
-# Print body without frontmatter and without leading blank lines.
 print_body() {
   awk 'NR==1 && /^---$/ {in_fm=1; next} in_fm && /^---$/ {in_fm=0; next} !in_fm' "$1" | sed -e '/[^[:space:]]/,$!d'
 }
 
-# --- 1. Project-wide instructions: AGENTS.md -> .github/copilot-instructions.md ---
+# --- 1. Project-wide instructions: .github/copilot-instructions.md -> AGENTS.md ---
 sync_project_wide() {
-  local src="AGENTS.md"
-  local dest=".github/copilot-instructions.md"
+  local src=".github/copilot-instructions.md"
+  local dest="AGENTS.md"
 
   [[ -f "$src" ]] || fail "$src not found"
 
   mkdir -p "$(dirname "$dest")"
   {
-    echo "<!-- DO NOT EDIT: Generated mirror of /$src for Copilot code review. Edit /$src instead. -->"
+    echo "<!-- DO NOT EDIT: Generated mirror of /$src. Edit /$src instead. -->"
     echo ""
     cat "$src"
   } >"$dest"
@@ -51,7 +45,6 @@ sync_path_specific() {
     local dest="$dest_dir/$base.md"
     local rel_src="${src#./}"
 
-    # Extract "applyTo" value (double-quoted, single line) to "paths".
     local apply_to
     apply_to="$(grep -m 1 -E '^applyTo:' "$src" | sed -E 's/^applyTo:[[:space:]]*"([^"]*)".*$/\1/' || true)"
 
@@ -90,7 +83,7 @@ sync_skills() {
     name="$(basename "$src_skill")"
     local dest_skill="$dest_dir/$name"
 
-    # Reject symlinks escaping the canonical skills directory.
+    # Symlinks must stay inside the canonical skills directory.
     while IFS= read -r -d "" link; do
       target="$(realpath -m "$link")"
       case "$target" in
@@ -99,7 +92,6 @@ sync_skills() {
       esac
     done < <(find "$src_skill" -type l -print0)
 
-    # Copy the entire skill directory, including any non-SKILL.md files.
     # Archive mode preserves symlinks and file modes.
     cp -a "$src_skill" "$dest_skill"
 
