@@ -33,6 +33,12 @@ pull_request_rules:
           - "admin"
 
 queue_rules:
+  - name: "renovate"
+    merge_method: "squash"
+    queue_conditions:
+      - "base = main"
+      - "author = renovate[bot]"
   - name: "default"
+    merge_method: "merge"
     queue_conditions:
       - "base = main"
