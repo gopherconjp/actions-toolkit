@@ -210,9 +210,11 @@ jobs:
 
 ### autofix-docs
 
-Fixes Markdown with markdownlint, formats docs with Oxfmt, commits via autofix-ci, then re-lints.  
+Fixes Markdown with markdownlint, formats Shell with shfmt (`-i 2`) and docs with Oxfmt, commits via autofix-ci, then re-lints.  
 Requires the `contents: read` permission and the autofix.ci GitHub App.  
 The calling workflow's `name` must be `autofix.ci` (required by autofix-ci).
+
+Place this step last of `autofix.ci` workflow; it commits all preceding changes.
 
 ```yaml
 name: autofix.ci
@@ -239,8 +241,8 @@ jobs:
 
 #### Inputs
 
-| Input            | Required | Default                                                                              | Description                                |
-| ---------------- | -------- | ------------------------------------------------------------------------------------ | ------------------------------------------ |
-| `markdown-globs` | —        | `**/*.{md,markdown}`                                                                 | Markdown files to lint, newline-delimited  |
-| `oxfmt-paths`    | —        | `**/*.md **/*.markdown **/*.yaml **/*.yml **/*.json **/*.jsonc **/*.json5 **/*.toml` | Paths for Oxfmt to format, space-delimited |
-| `enable-oxfmt`   | —        | `true`                                                                               | Whether to run Oxfmt formatting            |
+| Input            | Required | Default                                                                              | Description                                              |
+| ---------------- | -------- | ------------------------------------------------------------------------------------ | -------------------------------------------------------- |
+| `markdown-globs` | —        | `**/*.{md,markdown}`                                                                 | Markdown files to lint, newline-delimited                |
+| `oxfmt-paths`    | —        | `**/*.md **/*.markdown **/*.yaml **/*.yml **/*.json **/*.jsonc **/*.json5 **/*.toml` | Paths for Oxfmt to format, space-delimited (empty skips) |
+| `enable-shfmt`   | —        | `true`                                                                               | Whether to run shfmt formatting (`-i 2` on `.`)          |

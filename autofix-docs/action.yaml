@@ -1,5 +1,5 @@
 name: Autofix Docs
-description: Fix Markdown with markdownlint and format docs with Oxfmt, then verify with lint-only check.
+description: Fix Markdown with markdownlint, format Shell with shfmt and docs with Oxfmt, then verify with lint-only check.
 
 inputs:
   markdown-globs:
@@ -7,11 +7,11 @@ inputs:
     required: false
     default: "**/*.{md,markdown}"
   oxfmt-paths:
-    description: Paths for Oxfmt to format, space-delimited.
+    description: Paths for Oxfmt to format, space-delimited (empty skips).
     required: false
     default: "**/*.md **/*.markdown **/*.yaml **/*.yml **/*.json **/*.jsonc **/*.json5 **/*.toml"
-  enable-oxfmt:
-    description: Whether to run Oxfmt formatting.
+  enable-shfmt:
+    description: Whether to run shfmt formatting.
     required: false
     default: "true"
 
@@ -25,7 +25,6 @@ runs:
         fix: true
         globs: ${{ inputs.markdown-globs }}
     - name: Format with Oxfmt
-      if: inputs.enable-oxfmt == 'true'
       env:
         OXFMT_VERSION: "0.71.0"
         OXFMT_PATHS: ${{ inputs.oxfmt-paths }}
@@ -33,6 +32,13 @@ runs:
         set -o noglob
         [[ -n "${OXFMT_PATHS//[[:space:]]/}" ]] || exit 0
         npx --yes "oxfmt@${OXFMT_VERSION}" --write --no-error-on-unmatched-pattern $OXFMT_PATHS
+      shell: bash
+    - name: Setup shfmt
+      if: inputs.enable-shfmt == 'true'
+      uses: mfinelli/setup-shfmt@e52fd78d3a9a28dcf46656d4729c5d76be40ac0e # v4.0.1
+    - name: Format Shell with shfmt
+      if: inputs.enable-shfmt == 'true'
+      run: shfmt -w -i 2 .
       shell: bash
     - name: Commit changes
       uses: autofix-ci/action@c5b2d67aa2274e7b5a18224e8171550871fc7e4a # v1.3.4
