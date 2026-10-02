@@ -168,3 +168,40 @@ PRs without either label default to a patch release.
 | Output | Description                                     |
 | ------ | ----------------------------------------------- |
 | `tag`  | Created tag, empty when no release was created. |
+
+### autofix-docs
+
+Fixes Markdown with markdownlint, formats docs with Oxfmt, commits via autofix-ci, then re-lints.  
+Requires the `contents: read` permission and the autofix.ci GitHub App.  
+The calling workflow's `name` must be `autofix.ci` (required by autofix-ci).
+
+```yaml
+name: autofix.ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  autofix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Autofix Docs
+        uses: logica-oss/actions-toolkit/autofix-docs@main
+```
+
+#### Inputs
+
+| Input            | Required | Default                                                                              | Description                                |
+| ---------------- | -------- | ------------------------------------------------------------------------------------ | ------------------------------------------ |
+| `markdown-globs` | —        | `**/*.{md,markdown}`                                                                 | Markdown files to lint, newline-delimited  |
+| `oxfmt-paths`    | —        | `**/*.md **/*.markdown **/*.yaml **/*.yml **/*.json **/*.jsonc **/*.json5 **/*.toml` | Paths for Oxfmt to format, space-delimited |
+| `enable-oxfmt`   | —        | `true`                                                                               | Whether to run Oxfmt formatting            |
