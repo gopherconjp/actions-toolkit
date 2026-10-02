@@ -1,5 +1,3 @@
-<!-- DO NOT EDIT: Generated mirror of /AGENTS.md for Copilot code review. Edit /AGENTS.md instead. -->
-
 # Repository Instructions
 
 - Attach exactly one of the `patch`, `minor`, or `major` labels when creating or updating a PR.

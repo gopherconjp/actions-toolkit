@@ -169,6 +169,45 @@ PRs without either label default to a patch release.
 | ------ | ----------------------------------------------- |
 | `tag`  | Created tag, empty when no release was created. |
 
+### sync-agent-config
+
+Syncs agent configs from canonical sources.  
+Requires the `contents: read` permission.  
+`.claude/rules` and `.claude/skills` are fully regenerated on each run; do not place hand-written files there.
+
+Canonical sources and generated mirrors:
+
+| Source                                   | Mirror                                     |
+| ---------------------------------------- | ------------------------------------------ |
+| `AGENTS.md`                              | `.github/copilot-instructions.md`          |
+| `.github/instructions/*.instructions.md` | `.claude/rules/*.md` (`applyTo` → `paths`) |
+| `.agents/skills/*`                       | `.claude/skills/*` (copy)                  |
+
+```yaml
+name: autofix.ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  autofix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Sync Agent Config
+        uses: logica-oss/actions-toolkit/sync-agent-config@main
+      - name: Autofix
+        uses: autofix-ci/action@v1
+```
+
 ### autofix-docs
 
 Fixes Markdown with markdownlint, formats docs with Oxfmt, commits via autofix-ci, then re-lints.  

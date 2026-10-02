@@ -1,0 +1,9 @@
+name: Sync Agent Config
+description: Sync agent configs from canonical sources (AGENTS.md, .github/instructions, .agents/skills).
+
+runs:
+  using: composite
+  steps:
+    - name: Sync agent config
+      run: bash "${{ github.action_path }}/sync-agent-config.sh"
+      shell: bash
