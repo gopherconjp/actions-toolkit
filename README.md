@@ -204,8 +204,8 @@ jobs:
           persist-credentials: false
       - name: Sync Agent Config
         uses: logica-oss/actions-toolkit/sync-agent-config@main
-      - name: Autofix Text
-        uses: logica-oss/actions-toolkit/autofix-text@main
+      - name: Autofix
+        uses: autofix-ci/action@v1
 ```
 
 Run `sync-agent-config` before `autofix-text`; `autofix-text` commits the generated mirrors.
