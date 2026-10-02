@@ -204,13 +204,15 @@ jobs:
           persist-credentials: false
       - name: Sync Agent Config
         uses: logica-oss/actions-toolkit/sync-agent-config@main
-      - name: Autofix
-        uses: autofix-ci/action@v1
+      - name: Autofix Text
+        uses: logica-oss/actions-toolkit/autofix-text@main
 ```
 
-### autofix-docs
+Run `sync-agent-config` before `autofix-text`; `autofix-text` commits the generated mirrors.
 
-Fixes Markdown with markdownlint, formats Shell with shfmt (`-i 2`) and docs with Oxfmt, commits via autofix-ci, then re-lints.  
+### autofix-text
+
+Fixes Markdown with markdownlint, formats Shell with shfmt (`-i 2`) and text files with Oxfmt, commits via autofix-ci, then re-lints.  
 Requires the `contents: read` permission and the autofix.ci GitHub App.  
 The calling workflow's `name` must be `autofix.ci` (required by autofix-ci).
 
@@ -235,8 +237,8 @@ jobs:
         uses: actions/checkout@v7
         with:
           persist-credentials: false
-      - name: Autofix Docs
-        uses: logica-oss/actions-toolkit/autofix-docs@main
+      - name: Autofix Text
+        uses: logica-oss/actions-toolkit/autofix-text@main
 ```
 
 #### Inputs

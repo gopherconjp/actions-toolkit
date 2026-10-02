@@ -23,5 +23,5 @@ jobs:
           persist-credentials: false
       - name: Sync Agent Config
         uses: $/sync-agent-config
-      - name: Autofix Docs
-        uses: $/autofix-docs
+      - name: Autofix Text
+        uses: $/autofix-text
