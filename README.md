@@ -1,6 +1,7 @@
 # actions-toolkit
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![autofix.ci](https://github.com/logica-oss/actions-toolkit/actions/workflows/autofix.yaml/badge.svg)](https://github.com/logica-oss/actions-toolkit/actions/workflows/autofix.yaml)
 [![Verify (Repo)](https://github.com/logica-oss/actions-toolkit/actions/workflows/verify-repo.yaml/badge.svg)](https://github.com/logica-oss/actions-toolkit/actions/workflows/verify-repo.yaml)
 [![CodeQL Advanced](https://github.com/logica-oss/actions-toolkit/actions/workflows/codeql.yaml/badge.svg)](https://github.com/logica-oss/actions-toolkit/actions/workflows/codeql.yaml)
 
