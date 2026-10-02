@@ -16,10 +16,10 @@
       "depNameTemplate": "suzuki-shunsuke/ghalint"
     },
     {
-      "description": "Track the pinned oxfmt version in autofix-markdown action",
+      "description": "Track the pinned oxfmt version in autofix-docs action",
       "customType": "regex",
-      "managerFilePatterns": ["/^autofix-markdown\\/action\\.yaml$/"],
-      "matchStrings": ["default: \"(?<currentValue>\\d+\\.\\d+\\.\\d+)\""],
+      "managerFilePatterns": ["/^autofix-docs\\/action\\.yaml$/"],
+      "matchStrings": ["OXFMT_VERSION: \"(?<currentValue>\\d+\\.\\d+\\.\\d+)\""],
       "datasourceTemplate": "npm",
       "depNameTemplate": "oxfmt"
     }
