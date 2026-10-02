@@ -23,12 +23,5 @@
       "datasourceTemplate": "npm",
       "depNameTemplate": "oxfmt"
     }
-  ],
-  "packageRules": [
-    {
-      "description": "Auto merge all dependencies",
-      "matchUpdateTypes": ["major", "minor", "patch", "digest", "pin", "pinDigest"],
-      "automerge": true
-    }
   ]
 }
