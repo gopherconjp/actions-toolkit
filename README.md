@@ -208,8 +208,6 @@ jobs:
         uses: autofix-ci/action@v1
 ```
 
-Run `sync-agent-config` before `autofix-text`; `autofix-text` commits the generated mirrors.
-
 ### autofix-text
 
 Fixes Markdown with markdownlint, formats Shell with shfmt (`-i 2`) and text files with Oxfmt, commits via autofix-ci, then re-lints.  
