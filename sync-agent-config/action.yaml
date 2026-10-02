@@ -1,5 +1,5 @@
 name: Sync Agent Config
-description: Sync agent configs from canonical sources (AGENTS.md, .github/instructions, .agents/skills).
+description: Sync agent configs from canonical sources (.github/copilot-instructions.md, .github/instructions, .agents/skills).
 
 runs:
   using: composite

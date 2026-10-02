@@ -2,7 +2,7 @@
 set -eu -o pipefail
 
 # Sync agent configs from canonical sources.
-# - AGENTS.md -> .github/copilot-instructions.md (with DO NOT EDIT header)
+# - .github/copilot-instructions.md -> AGENTS.md (with DO NOT EDIT header)
 # - .github/instructions/*.instructions.md -> .claude/rules/*.md (applyTo -> paths)
 # - .agents/skills/* -> .claude/skills/* (copy)
 
@@ -19,16 +19,16 @@ print_body() {
   awk 'NR==1 && /^---$/ {in_fm=1; next} in_fm && /^---$/ {in_fm=0; next} !in_fm' "$1" | sed -e '/[^[:space:]]/,$!d'
 }
 
-# --- 1. Project-wide instructions: AGENTS.md -> .github/copilot-instructions.md ---
+# --- 1. Project-wide instructions: .github/copilot-instructions.md -> AGENTS.md ---
 sync_project_wide() {
-  local src="AGENTS.md"
-  local dest=".github/copilot-instructions.md"
+  local src=".github/copilot-instructions.md"
+  local dest="AGENTS.md"
 
   [[ -f "$src" ]] || fail "$src not found"
 
   mkdir -p "$(dirname "$dest")"
   {
-    echo "<!-- DO NOT EDIT: Generated mirror of /$src for Copilot code review. Edit /$src instead. -->"
+    echo "<!-- DO NOT EDIT: Generated mirror of /$src. Edit /$src instead. -->"
     echo ""
     cat "$src"
   } >"$dest"

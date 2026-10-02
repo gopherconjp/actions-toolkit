@@ -173,13 +173,13 @@ PRs without either label default to a patch release.
 
 Syncs agent configs from canonical sources.  
 Requires the `contents: read` permission.  
-`.claude/rules` and `.claude/skills` are fully regenerated on each run; do not place hand-written files there.
+`AGENTS.md`, `.claude/rules` and `.claude/skills` are fully regenerated on each run; do not place hand-written files there.
 
 Canonical sources and generated mirrors:
 
 | Source                                   | Mirror                                     |
 | ---------------------------------------- | ------------------------------------------ |
-| `AGENTS.md`                              | `.github/copilot-instructions.md`          |
+| `.github/copilot-instructions.md`        | `AGENTS.md`                                |
 | `.github/instructions/*.instructions.md` | `.claude/rules/*.md` (`applyTo` → `paths`) |
 | `.agents/skills/*`                       | `.claude/skills/*` (copy)                  |
 
