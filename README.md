@@ -87,7 +87,7 @@ name: Verify (Release Label)
 
 on:
   pull_request:
-    types: [opened, labeled, unlabeled, synchronize]
+    types: [opened, labeled, unlabeled, synchronize, reopened]
 
 jobs:
   check-release-label:
