@@ -42,3 +42,4 @@ queue_rules:
     merge_method: "merge"
     queue_conditions:
       - "base = main"
+      - "author != renovate[bot]"
