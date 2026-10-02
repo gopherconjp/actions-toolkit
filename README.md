@@ -80,6 +80,7 @@ jobs:
 ### check-release-label
 
 Fails unless exactly one of the patch, minor, or major release labels is attached.  
+Draft pull requests are skipped.  
 Requires the `pull-requests: read` permission.
 
 ```yaml
@@ -102,18 +103,19 @@ jobs:
           major-label: major # defaults to major
           minor-label: minor # defaults to minor
           patch-label: patch # defaults to patch
-          ignore-authors: | # defaults to renovate[bot]
+          ignore-authors: | # defaults to renovate[bot] and mergify[bot]
             renovate[bot]
+            mergify[bot]
 ```
 
 #### Inputs
 
-| Input            | Required | Default         | Description                                  |
-| ---------------- | -------- | --------------- | -------------------------------------------- |
-| `major-label`    | —        | `major`         | Label triggering a major release             |
-| `minor-label`    | —        | `minor`         | Label triggering a minor release             |
-| `patch-label`    | —        | `patch`         | Label triggering a patch release             |
-| `ignore-authors` | —        | `renovate[bot]` | Authors skipped without labels, one per line |
+| Input            | Required | Default                       | Description                                  |
+| ---------------- | -------- | ----------------------------- | -------------------------------------------- |
+| `major-label`    | —        | `major`                       | Label triggering a major release             |
+| `minor-label`    | —        | `minor`                       | Label triggering a minor release             |
+| `patch-label`    | —        | `patch`                       | Label triggering a patch release             |
+| `ignore-authors` | —        | `renovate[bot], mergify[bot]` | Authors skipped without labels, one per line |
 
 ### release
 
