@@ -25,7 +25,7 @@ runs:
         fix: true
         globs: ${{ inputs.markdown-globs }}
     - name: Format with Oxfmt
-      if: inputs.enable-oxfmt == 'true'
+      if: inputs.enable-oxfmt == 'true' && inputs.oxfmt-paths != ''
       env:
         OXFMT_VERSION: "0.71.0"
         OXFMT_PATHS: ${{ inputs.oxfmt-paths }}
