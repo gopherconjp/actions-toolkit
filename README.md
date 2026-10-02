@@ -200,8 +200,8 @@ jobs:
 
 #### Inputs
 
-| Input            | Required | Default                                                                                              | Description                                |
-| ---------------- | -------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| `markdown-globs` | —        | `**/*.{md,markdown}`                                                                                 | Markdown files to lint, newline-delimited  |
-| `oxfmt-paths`    | —        | `"**/*.md" "**/*.markdown" "**/*.yaml" "**/*.yml" "**/*.json" "**/*.jsonc" "**/*.json5" "**/*.toml"` | Paths for Oxfmt to format, space-delimited |
-| `enable-oxfmt`   | —        | `true`                                                                                               | Whether to run Oxfmt formatting            |
+| Input            | Required | Default                                                                              | Description                                |
+| ---------------- | -------- | ------------------------------------------------------------------------------------ | ------------------------------------------ |
+| `markdown-globs` | —        | `**/*.{md,markdown}`                                                                 | Markdown files to lint, newline-delimited  |
+| `oxfmt-paths`    | —        | `**/*.md **/*.markdown **/*.yaml **/*.yml **/*.json **/*.jsonc **/*.json5 **/*.toml` | Paths for Oxfmt to format, space-delimited |
+| `enable-oxfmt`   | —        | `true`                                                                               | Whether to run Oxfmt formatting            |

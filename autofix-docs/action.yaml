@@ -9,7 +9,7 @@ inputs:
   oxfmt-paths:
     description: Paths for Oxfmt to format, space-delimited.
     required: false
-    default: '"**/*.md" "**/*.markdown" "**/*.yaml" "**/*.yml" "**/*.json" "**/*.jsonc" "**/*.json5" "**/*.toml"'
+    default: "**/*.md **/*.markdown **/*.yaml **/*.yml **/*.json **/*.jsonc **/*.json5 **/*.toml"
   enable-oxfmt:
     description: Whether to run Oxfmt formatting.
     required: false
@@ -29,7 +29,11 @@ runs:
       env:
         OXFMT_VERSION: "0.71.0"
         OXFMT_PATHS: ${{ inputs.oxfmt-paths }}
-      run: npx --yes "oxfmt@${OXFMT_VERSION}" --write --no-error-on-unmatched-pattern $OXFMT_PATHS
+      run: |
+        set -o noglob
+
+        # shellcheck disable=SC2086
+        npx --yes "oxfmt@${OXFMT_VERSION}" --write --no-error-on-unmatched-pattern $OXFMT_PATHS
       shell: bash
     - name: Commit changes
       uses: autofix-ci/action@c5b2d67aa2274e7b5a18224e8171550871fc7e4a # v1.3.4
